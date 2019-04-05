@@ -2,8 +2,8 @@
 
 static char		*read_line(const int fd, char *buffer, int *rtrn)
 {
-	char	*tmp2;
 	char	tmp[BUFF_SIZE + 1];
+	char	*tmp2;
 	int		read_res;
 
 	while ((read_res = read(fd, tmp, BUFF_SIZE)))
