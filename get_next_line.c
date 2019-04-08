@@ -6,9 +6,9 @@ static char		*read_line(const int fd, char **buffer)
 	char	*tmp2;
 	int		r_rslt;
 
-	while ((read_res = read(fd, tmp, BUFF_SIZE)))
+	while ((r_rslt = read(fd, tmp, BUFF_SIZE)))
 	{
-		tmp[r_reslt] = '\0';
+		tmp[r_rslt] = '\0';
 		tmp2 = *buffer;
 		if (!(buffer = ft_strjoin(*buffer, tmp)))
 			return (-1);
