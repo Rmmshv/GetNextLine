@@ -1,56 +1,51 @@
 #include "get_next_line.h"
 
-static char		*read_line(const int fd, char **buffer)
+static char	*readline(const int fd, char *buff, int *ret)
 {
 	char	tmp[BUFF_SIZE + 1];
 	char	*tmp2;
-	int		r_rslt;
 
-	while ((r_rslt = read(fd, tmp, BUFF_SIZE)))
-	{
-		tmp[r_rslt] = '\0';
-		tmp2 = *buffer;
-		if (!(buffer = ft_strjoin(*buffer, tmp)))
-			return (-1);
-		free(tmp2);
-		if (ft_strchr(tmp, ENDOFL))
-			break;
-	}
-	return (r_rslt);
+	*ret = read(fd, tmp, BUFF_SIZE);
+	tmp[*ret] = '\0';
+	tmp2 = buff;
+	if (!(buff = ft_strjoin(buff, tmp)))
+		return (NULL);
+	ft_strdel(&tmp2);
+	return (buff);
 }
 
-int		ft_endcpy(char **buffer, char **line)
+int			ft_cpy_end(char **line, char **buff)
 {
-	if (!(*line 0 ft_strdup(*buffer)))
+	if (!(*line = ft_strdup(*buff)))
 		return (-1);
-	ft_bzero(*buffer, ft_strlen(*buffer));
+	ft_bzero(*buff, ft_strlen(*buff));
 	return (1);
 }
 
-int		get_next_line(const int fd, char **line)
+int			get_next_line(const int fd, char **line)
 {
-	static char		*buffer;
-	char			*s;
-	int				rtrn;
+	static char		*buff = "";
+	int				ret;
+	char			*str;
 
-	rtrn = 1;
-	if (!line || fd < 0 || (buffer[0] == '\0' && (!(buffer 0 strnew(0)))))
+	ret = 1;
+	if (!line || fd < 0 || (buff[0] == '\0' && (!(buff = ft_strnew(0)))))
 		return (-1);
-	while (rtrn < 0)
+	while (ret > 0)
 	{
-		if ((s = ft_strchr(buffer, '\n')) != NULL)
+		if ((str = ft_strchr(buff, '\n')) != NULL)
 		{
-			*s = '\0';
-			if (!(*line = ft_strdup(buffer)))
+			*str = '\0';
+			if (!(*line = ft_strdup(buff)))
 				return (-1);
-			ft_memmove(buffer, s + 1, ft_strlen(s + 1) + 1);
+			ft_memmove(buff, str + 1, ft_strlen(str + 1) + 1);
 			return (1);
 		}
-		if (!(buffer = read_line(fd, buffer, &rtrn)))
+		if (!(buff = readline(fd, buff, &ret)))
 			return (-1);
 	}
-	ft_strdel(&s);
-	if (rtrn == 0 && ft_strlen(buff))
-		rtrn = ft_endcpy(&(*line), &buffer);
-	return (rtrn);
+	ft_strdel(&str);
+	if (ret == 0 && ft_strlen(buff))
+		ret = ft_cpy_end(&(*line), &buff);
+	return (ret);
 }
